@@ -137,7 +137,13 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+            for (int row = 0; row < b.size(); row++) {
+                for (int col = 0; col < b.size(); col++) {
+                    if (b.tile(row, col) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +153,14 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+                Tile currentTile = b.tile(row, col);
+                if (currentTile != null && currentTile.value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -158,8 +171,32 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        for (int row = 0; row < b.size(); row++) {
+            for (int col = 0; col < b.size(); col++) {
+                Tile currentTile = b.tile(row, col);
+                if (isRightAdjacentSame(currentTile, b) || isBottomAdjacentSame(currentTile, b)) {
+                    return true;
+                }
+            }
+        }
         return false;
+    }
+
+    private static boolean isRightAdjacentSame(Tile tile, Board board) {
+        if (tile.row() < board.size() - 1) {
+            return tile.value() == board.tile(tile.col(), tile.row() + 1).value();
+        }
+        return  false;
+    }
+
+    private static boolean isBottomAdjacentSame(Tile tile, Board board) {
+        if (tile.col() < board.size() - 1) {
+            return tile.value() == board.tile(tile.col() + 1, tile.row()).value();
+        }
+        return  false;
     }
 
 
