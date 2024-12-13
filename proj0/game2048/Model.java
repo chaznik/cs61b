@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Chazni
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -137,7 +137,13 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
+                if (b.tile(col, row) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +153,13 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        for (int col = 0; col < b.size(); col++) {
+            for (int row = 0; row < b.size(); row++) {
+                if (b.tile(col, row) != null && b.tile(col, row).value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -158,7 +170,36 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        return emptySpaceExists(b) || isUpOrDownValid(b) || isLeftOrRightValid(b);
+    }
+
+    private static boolean isUpOrDownValid(Board b) {
+            for (int col = 0; col < b.size(); col++) {
+                Tile currentTile = b.tile(col, 0);
+                for (int row = 1; row < b.size(); row++) {
+                    Tile nextTileInRow = b.tile(col, row);
+                    if (currentTile.value() == nextTileInRow.value()) {
+                        return true;
+                    } else {
+                        currentTile = nextTileInRow;
+                    }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isLeftOrRightValid(Board b) {
+        for (int row = 0; row < b.size(); row++) {
+            Tile currentTile = b.tile(0, row);
+            for (int col = 1; col < b.size(); col++) {
+                Tile nextTileInRow = b.tile(col, row);
+                if (currentTile.value() == nextTileInRow.value()) {
+                    return true;
+                } else {
+                    currentTile = nextTileInRow;
+                }
+            }
+        }
         return false;
     }
 
