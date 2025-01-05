@@ -114,11 +114,51 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        int col = 0;
+        while (col <= this.board.size() - 1) {
+            processColumn(col);
+            col++;
+        }
         checkGameOver();
+        changed = true;
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    public void processColumn(int col) {
+        int row = this.board.size() - 1;
+        int startingRow = this.board.size() - 1;
+        Tile firstTile = getTile(col, row);
+        if (firstTile != null) {
+            row = firstTile.row() - 1;
+        }
+        Tile nextTile = getTile(col, row);
+
+        if (firstTile != null) {
+            this.board.move(col, startingRow, firstTile);
+            if (nextTile != null && firstTile.value() == nextTile.value()) {
+                this.board.move(col, startingRow, nextTile);
+                this.score += firstTile.value() * 2;
+                startingRow = firstTile.row() + 1;
+            } else if (nextTile != null && firstTile.value() != nextTile.value()) {
+                this.board.move(col, firstTile.row() + 1, nextTile);
+                startingRow = nextTile.row() + 1;
+            }
+        }
+    }
+
+    private Tile getTile(int col, int row) {
+        while (row >= 0) {
+            Tile tile = this.board.tile(col, row);
+            if (tile == null) {
+                row--;
+            } else {
+                return tile;
+            }
+        }
+        return null;
     }
 
     /** Checks if the game is over and sets the gameOver variable
